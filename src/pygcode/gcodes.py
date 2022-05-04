@@ -508,22 +508,24 @@ class GCodeRigidTapping(GCodeMotion):
     param_letters = GCodeMotion.param_letters | set('K')
     word_key = Word('G', 33.1)
 
-
-class GCodeCancelCannedCycle(GCodeMotion):
-    """G80: Cancel Canned Cycle"""
-    word_key = Word('G', 80)
-    # Modal Group
-    #   Technically G80 belongs to the motion modal group, however it's often
-    #   expressed in the same line as another motion command.
-    #   This is alowed, but executed just prior to any other motion command
-    #       eg: G00 G80
-    #   will leave the machine in rapid motion mode
-    #   Just running G80 will leave machine with no motion mode.
-    modal_group = None
-    exec_order = 241
-
-    def _process(self, machine):
-        machine.mode.motion = None
+#
+# Conflicts with prusa command 
+#
+#class GCodeCancelCannedCycle(GCodeMotion):
+#    """G80: Cancel Canned Cycle"""
+#    word_key = Word('G', 80)
+#    # Modal Group
+#    #   Technically G80 belongs to the motion modal group, however it's often
+#    #   expressed in the same line as another motion command.
+#    #   This is alowed, but executed just prior to any other motion command
+#    #       eg: G00 G80
+#    #   will leave the machine in rapid motion mode
+#    #   Just running G80 will leave machine with no motion mode.
+#    modal_group = None
+#    exec_order = 241
+#
+#    def _process(self, machine):
+#        machine.mode.motion = None
 
 
 # ======================= Canned Cycles =======================
@@ -1375,6 +1377,7 @@ class GCodeUserDefined(GCodeNonModal):
 # M204              S T                 Acceleration settings
 # M221              S T                 Set extrude factor override percentage
 # M106              S                   Set fan speed
+# G80               N R V L R F B       Mesh-based Z probe
 
 class GCodePrintChecking(GCode):
     exec_order = 999
@@ -1460,6 +1463,12 @@ class GCodeSetFanSpeed(GCode):
     modal_group = MODAL_GROUP_MAP['user_defined']
     param_letters = set('S')
     word_key = Word('M', 106)
+
+class GCodeMeshBasedZProbe(GCode):
+    exec_order = 999
+    modal_group = MODAL_GROUP_MAP['user_defined']
+    param_letters = set('NRVLRFB')
+    word_key = Word('G', 80)
 
 # ======================= Utilities =======================
 
