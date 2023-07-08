@@ -64,7 +64,7 @@ from .exceptions import GCodeParameterError, GCodeWordStrError
 #
 #                 Table 6. M-Code Modal Groups
 #       MODAL GROUP MEANING                     MEMBER WORDS
-#       Stopping (Group 4)                      M0, M1, M2, M30, M60
+#       Stopping (Group 4)                      M0, M1, M2, M30, M60, M84
 #       Spindle (Group 7)                       M3, M4, M5
 #       Coolant (Group 8)                       (M7 M8 can both be on), M9
 #       Override Switches (Group 9)             M48, M49
@@ -803,6 +803,7 @@ class GCodeCancelToolLengthOffset(GCodeToolLength):
 # M0, M1                                Program Pause
 # M2, M30                               Program End
 # M60                                   Pallet Change Pause
+# M84               S X Y Z E           Disable steppers
 
 class GCodeProgramControl(GCode):
     word_letter = 'M'
@@ -832,6 +833,11 @@ class GCodeEndProgramPalletShuttle(GCodeProgramControl):
 class GCodePalletChangePause(GCodeProgramControl):
     """M60: Pallet Change Pause"""
     word_key = Word('M', 60)
+
+
+class GCodeDisableSteppers(GCodeProgramControl):
+    """M84: Disable steppers"""
+    word_key = Word('M', 84)
 
 
 # ======================= Units =======================
