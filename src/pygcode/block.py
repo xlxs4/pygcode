@@ -78,10 +78,12 @@ class Block(object):
                     ]))
                 modal_groups.add(gc.modal_group)
 
-    def __getattr__(self, k):
-        if k in self._word_map:
+    def __getattr__(self, item):
+        if item.startswith("__"): # https://stackoverflow.com/a/47300262/10772985
+            raise AttributeError(item) # https://nedbatchelder.com/blog/201010/surprising_getattr_recursion.html
+        if item in self._word_map:
             for w in self.words:
-                if w.letter == k:
+                if w.letter == item:
                     return w
             # if word is not in this block:
             return None
