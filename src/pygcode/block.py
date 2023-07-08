@@ -91,7 +91,7 @@ class Block(object):
         else:
             raise AttributeError("'{cls}' object has no attribute '{key}'".format(
                 cls=self.__class__.__name__,
-                key=k
+                key=item
             ))
 
     def __len__(self):
